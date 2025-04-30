@@ -2,24 +2,19 @@ package pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.PageFactory;
 import org.testng.Assert;
+import utils.Hooks;
 
 import java.util.Set;
 
-public class pdpPage {
+public class pdpPage extends Hooks{
 
-    protected WebDriver driver;
 
-    public pdpPage(WebDriver driver){
-        this.driver = driver;
-        PageFactory.initElements(driver, this);
-    }
+
 
     // variables
-    String eluxUrl = "https://t1-electrolux-qa-a.eluxmkt.com/fr-fr/laundry/laundry/washing-machines/top-loader-washing-machine/ew6t3465ed/";
-    String expectedUrl = "ACGBWM22RDE0001K.pdf";
+//    String eluxUrl = "https://www.electrolux.fr/kitchen/dishwashing/dishwashers/built-in-compact-dishwasher/esl2500ro2/";
+//    String expectedUrl = "ACGBWM22RDE0001K.pdf";
     String wrongDoc = "URL does not end with .pdf";
 
     // Locators
@@ -27,6 +22,10 @@ public class pdpPage {
     By cookiesPopUpLocator= By.xpath("//div[@class=\"ot-sdk-container\"]//div[@class=\"ot-sdk-row\"]");
     By repairIndexLocator = By.xpath("//div[contains(@class, \"energy-information\")][2]//img[@class=\"picture-img\"]");
     By rejectCookiesLocator = By.xpath("");
+
+    By addToCartLocator = By.xpath("//div[@class=\"product-landing__add-to-cart\"]//button[@data-webid=\"add-to-cart\"]");
+
+    By itemNameLocator = By.xpath("//h1[@class=\"product-landing__model-name\"]");
 
     // Actions
     public void acceptCookies(){
@@ -57,24 +56,26 @@ public class pdpPage {
     public void handleCookiesPopUpSwitch(String action) {
 
 
-        driver.findElement(cookiesPopUpLocator).isDisplayed();
-        action = "accept";
+        if(driver.findElement(cookiesPopUpLocator).isDisplayed()){
+            switch (action){
+                case "accept":
+                    driver.findElement(acceptCookiesLocator).click();
+                    break;
+                case "decline":
+                    driver.findElement(rejectCookiesLocator).click();
+                    break;
+                default:
+                    System.out.println("Pop up didn't appear");
 
-        switch (action){
-            case "accept":
-                driver.findElement(acceptCookiesLocator).click();
-                break;
-            case "decline":
-                driver.findElement(rejectCookiesLocator).click();
-                break;
-            default:
-                System.out.println("Pop up didn't appear");
-
+            }
         }
+
+
     }
 
 
     public void clickOnRepairIndex(){
+
         driver.findElement(repairIndexLocator).click();
     }
 
@@ -101,5 +102,17 @@ public class pdpPage {
                 break;
             }
         }
+    }
+
+    public void clickAddToCart(){
+        driver.findElement(addToCartLocator).click();
+    }
+
+    public String storeModelName(){
+
+        return driver.findElement(itemNameLocator).getText().trim();
+
+
+
     }
 }
